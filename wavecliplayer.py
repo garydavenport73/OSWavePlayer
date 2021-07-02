@@ -30,7 +30,6 @@ def stopwave(process):
             else: process.terminate()
     except:
         pass
-    pass
 
 def getIsPlaying(process):
     isSongPlaying=False
