@@ -11,13 +11,13 @@
 from platform import system
 import subprocess
 from subprocess import Popen, PIPE
-from os import path
+import os
 
 def playwave(fileName, block=False):
     fileName=fileName
-    if system()=="Linux": command = "exec aplay --quiet " + path.abspath(fileName)
-    elif system()=="Windows": command="%SystemRoot%\system32\WindowsPowerShell/v1.0\powershell.exe -c (New-Object Media.SoundPlayer '"+path.abspath(fileName)+"').PlaySync()"
-    elif system()=="Darwin": command = "exec afplay \'" + path.abspath(fileName)+"\'"
+    if system()=="Linux": command = "exec aplay --quiet " + os.path.abspath(fileName)
+    elif system()=="Windows": command="%SystemRoot%\system32\WindowsPowerShell/v1.0\powershell.exe -c (New-Object Media.SoundPlayer '"+os.path.abspath(fileName)+"').PlaySync()"
+    elif system()=="Darwin": command = "exec afplay \'" + os.path.abspath(fileName)+"\'"
     else: print(str(system()+" unknown to wavecliplayer"));return None
     if block==True: P = subprocess.Popen(command, universal_newlines=True, shell=True,stdout=PIPE, stderr=PIPE).communicate()
     else: P = subprocess.Popen(command, universal_newlines=True, shell=True,stdout=PIPE, stderr=PIPE)
@@ -26,7 +26,8 @@ def playwave(fileName, block=False):
 def stopwave(process):
     try:
         if process is not None:
-            if system()=="Windows": subprocess.call(['taskkill', '/F', '/T', '/PID',  str(process.pid)])
+            if system()=="Windows": 
+                os.system("taskkill /F /T /PID "+ str(process.pid) + " >NUL")          
             else: process.terminate()
     except:
         pass
@@ -38,5 +39,7 @@ def getIsPlaying(process):
         except: pass
     return isSongPlaying
 
-playsound=playwave
+def playsound(fileName, block=True):
+    return(playwave(fileName, block))
+
 stopsound=stopwave
