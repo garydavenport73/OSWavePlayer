@@ -1,7 +1,7 @@
-# OSWavPlayer
-This is a simple wave player that uses the command line to issue instructions to the OS to play wav files.
+# OSWavePlayer
+This is a simple wave player that uses the command line to issue instructions to the OS to play .wav files.
 
-I wanted to write the simplest cross-platform wav player, that can do the basics and would not have
+I wanted to write the simplest cross-platform wave player, that can do the basics and would not have
 any sort of dependencies.  It simply issues subprocess calls to the operating system to play the sound, and
 as long as the operating system has not been significantly altered (you have not removed the operating systems
 wave playing applications) it should work.  The player issues commands to stop the subprocesses to stop playing
@@ -15,7 +15,7 @@ the sounds.
 
 To use the module simply add:
 ```
-from wavecliplayer import *`
+from oswaveplayer import *`
 ```
 and this will import all its functions.
 
@@ -33,19 +33,19 @@ you will have to use the return value of playwave.  Read a little further and th
 
 ### Examples:
 
-To play a wave file:
+#### To play a wave file:
 ```
 playwave("coolhipstersong.wav") #-> this plays the wav file
 
 mysong=play("coolhipstersong.wav") #-> this plays the wav file and also returns the song subprocess
 ```
 
-To stop your song:
+#### To stop your song:
 ```
 stopwave(mysong) # -> this stops the subprocess, mysong, which you created in the line above
 ```
 
-To find out if your wave file is playing:
+#### To find out if your wave file is playing:
 
 ```
 isitplaying = getIsPlaying(mysong) -> sets a variable to True or False, depending on if process is running
@@ -58,7 +58,7 @@ else:
     print("Your song is not playing")
 ```
 
-To play a wave file synchronously:
+#### To play a wave file synchronously:
 ```
 playwave("coolhipstersong.wav",1) #-> this plays the wav file synchronously
 
@@ -79,9 +79,13 @@ mysong=play("coolhipstersong.wav",block=True) #-> this plays the wav file synchr
 ### Notes about using this module as a replacement in the playsound module:
 
 Additionally, I included an alias to the function named 'playsound', and if used, the default block will be true, or synchronous play.  This way, the
-module can be used in place of the playsound module (https://github.com/TaylorSMarks/playsound/blob/master/playsound.py) with the same syntax.  If the playsound module does not work as it is no longer maintained, you can load this module and use the import statement
+module can be used in place of the playsound module (https://github.com/TaylorSMarks/playsound/blob/master/playsound.py) with the same syntax.  If the playsound module does not work for you, as it is no longer maintained, you can load this module and use the import statement below for .wav files only.
 
+
+Use:
 ```
-from oswavplayer import playsound
+from oswaveplayer import playsound
 ```
+for backwards compatibility with the playsound module - .wav files only.
+
 
