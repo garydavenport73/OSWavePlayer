@@ -12,6 +12,54 @@ from platform import system
 import subprocess
 from subprocess import Popen, PIPE
 import os
+from threading import Thread
+from time import sleep
+import sndhdr
+
+class MusicLooper:
+    def __init__(self, fileName):
+        self.fileName = fileName
+        self.playing = False
+        self.songProcess = None
+
+    def _playwave(self):
+        self.songProcess=playwave(self.fileName)
+
+    def _playloop(self):
+        while self.playing==True:
+            self.songProcess=playwave(self.fileName)
+            sleep(self._getWavDurationFromFile())
+
+    def startMusicLoop(self):
+        if self.playing==True:
+            print("Already playing, stop before starting new.")
+            return
+        else:
+            self.playing=True
+            t = Thread(target=self._playloop)
+            t.setDaemon(True)
+            t.start()
+            
+    def stopMusicLoop(self):
+        if self.playing==False:
+            print(str(self.songProcess)+" already stopped, play before trying to stop.")
+            return
+        else:
+            self.playing=False
+            stopwave(self.songProcess)
+
+    def _getWavDurationFromFile(self):
+        frames = sndhdr.what(self.fileName)[3]
+        rate = sndhdr.what(self.fileName)[1]
+        duration = float(frames)/rate
+        return duration
+
+    def getSongProcess(self):
+        return(self.songProcess)
+
+    def getPlaying(self):
+        return(self.playing)
+
 
 def playwave(fileName, block=False):
     fileName=fileName
@@ -24,13 +72,18 @@ def playwave(fileName, block=False):
     return P
 
 def stopwave(process):
-    try:
-        if process is not None:
-            if system()=="Windows": 
-                os.system("taskkill /F /T /PID "+ str(process.pid) + " >NUL")          
-            else: process.terminate()
-    except:
+    if process is not None:
+        try:
+            if process is not None:
+                if system()=="Windows": 
+                    os.system("taskkill /F /T /PID "+ str(process.pid) + " >NUL")          
+                else: process.terminate()
+        except:
+            pass
+            #print("process is not playing")
+    else:
         pass
+        #print("process ", str(process), " not playing")
 
 def getIsPlaying(process):
     isSongPlaying=False
@@ -41,5 +94,23 @@ def getIsPlaying(process):
 
 def playsound(fileName, block=True):
     return(playwave(fileName, block))
+
+def startloop(fileName):
+    looper=MusicLooper(fileName)
+    looper.startMusicLoop()
+    return(looper)
+
+def stoploop(looperObject):
+    if looperObject is not None:
+        looperObject.stopMusicLoop()
+    else:
+        pass
+        #print("looperObject ", str(looperObject), " not playing")
+
+def getIsLoopPlaying(looperObject):
+    if looperObject is not None:
+        return(looperObject.getPlaying())
+    else:
+        return False
 
 stopsound=stopwave
