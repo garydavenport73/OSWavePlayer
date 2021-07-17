@@ -3,8 +3,8 @@ This is a simple wave player that uses the command line to issue instructions to
 
 I wanted to write the simplest cross-platform wave player, that can do the basics and would not have
 any sort of dependencies.  It simply issues subprocess calls to the operating system to play the sound, and
-as long as the operating system has not been significantly altered (you have not removed the operating systems
-wave playing applications) it should work.  The player issues commands to stop the subprocesses to stop playing
+as long as the operating system has not been significantly altered (you have not removed the operating system's
+wave playing applications) it should work.  The player can issue commands to stop the subprocesses to stop playing
 the sounds.
 
 #### -Windows10 uses the Media.Soundplayer module built into Windows 10
@@ -15,7 +15,7 @@ the sounds.
 
 To use the module simply add:
 ```
-from oswaveplayer import *`
+from oswaveplayer import *
 ```
 and this will import all its functions.
 
@@ -27,6 +27,16 @@ stopwave(yourSound)
 
 getIsPlaying(yourSound)
 ```
+Then, I added a few more:
+
+```
+backgroundSong = loopwave("yourfilename")
+
+and
+
+stoploop(backgroundSong)
+```
+
 Here are some examples on how to use them.
 Note that with 'playwave' it can be used as a standalone function, but if you want to stop the file from playing,
 you will have to use the return value of playwave.  Read a little further and the examples should be obvious.
@@ -37,7 +47,7 @@ you will have to use the return value of playwave.  Read a little further and th
 ```
 playwave("coolhipstersong.wav") #-> this plays the wav file
 
-mysong=play("coolhipstersong.wav") #-> this plays the wav file and also returns the song subprocess
+mysong=playwave("coolhipstersong.wav") #-> this plays the wav file and also returns the song subprocess
 ```
 
 #### To stop your song:
@@ -69,10 +79,23 @@ playwave("coolhipstersong.wav",block=True)
 
 * Note: commands below will work, but you cannot stop the song, because your progam will be blocked until the song is done playing
 
-mysong=play("coolhipstersong.wav",1) #-> this plays the wav file synchronously and also returns the song subprocess
+mysong=playwave("coolhipstersong.wav",1) #-> this plays the wav file synchronously and also returns the song subprocess
 or 
-mysong=play("coolhipstersong.wav",block=True) #-> this plays the wav file synchronously and also returns the song subprocess
+mysong=playwave("coolhipstersong.wav",block=True) #-> this plays the wav file synchronously and also returns the song subprocess
 
+
+```
+#### To play a wave file in a continous loop:
+
+```
+myloop=loopwave("appropriatebackgroundsong.wav")
+
+```
+This starts a background loop playing, but also returns a reference to the background process so it can be stopped.
+#### To stop the continuous loop from playing:
+
+```
+stoploop(myloop)
 
 ```
 
@@ -85,7 +108,6 @@ module can be used in place of the playsound module (https://github.com/TaylorSM
 Use:
 ```
 from oswaveplayer import playsound
+
 ```
 for backwards compatibility with the playsound module - .wav files only.
-
-
